@@ -20,9 +20,13 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "import/no-unresolved": "off",
+        "object-curly-newline": "off",
         quotes: ["error", "double"],        // 더블 쿼터 사용
         "quote-props": "off",
         "eol-last": "off",
+        "eact/jsx-tag-spacing": "off",
+        "no-multi-spaces": "off",
         "@typescript-eslint/quotes": "off",       //더블 쿼터 사용
         "no-unused-vars": "off",        //사용 안한 변수 경고
         "spaced-comment": "off",        //주석을 뒤에 쓰지 말라는 경고
