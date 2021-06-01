@@ -13,6 +13,7 @@ const app = ({ Component, pageProps }: AppProps) => {
       <Header />
       <Component {...pageProps} />
       <Footer />
+      <div id="root-modal" />
     </>
   );
 };

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
+
 import styled from "styled-components";
 import palette from "../styles/palette";
+
+import ModalPortal from "./ModalPortal";
+import SignUpModal from "./auth/SignUpModal";
 
 import AirbnbLogoIcon from "../public/static/svg/logo/logo.svg";
 import AirbnbLogoTextIcon from "../public/static/svg/logo/logo_text.svg";
@@ -100,10 +104,9 @@ const Header: React.FC = () => {
         </button>
       </div>
       {modalOpened && (
-        <div className="modal-wrapper">
-          <div className="modal-background" role="presentation" onClick={() => setModalOpened(false)} />
-          <div className="modal-contents" />
-        </div>
+        <ModalPortal closePortal={() => setModalOpened(false)}>
+          <SignUpModal />
+        </ModalPortal>
       )}
     </Container>
   );

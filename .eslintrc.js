@@ -26,6 +26,8 @@ module.exports = {
         "quote-props": "off",
         "eol-last": "off",
         "no-trailing-spaces": "off",
+        "keyword-spacing": "off",
+        "space-before-blocks": "off",
         "eact/jsx-tag-spacing": "off",
         "no-multi-spaces": "off",
         "@typescript-eslint/quotes": "off",       //더블 쿼터 사용
