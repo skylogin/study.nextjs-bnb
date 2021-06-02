@@ -8,6 +8,8 @@ import Input from "../common/Input";
 import Selector from "../common/Selector";
 import Button from "../common/Button";
 
+import useValidateMode from "../../hooks/useValidateMode";
+
 import CloseXIcon from "../../public/static/svg/modal/modal_close_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
 import PersonIcon from "../../public/static/svg/auth/person.svg";
@@ -18,6 +20,7 @@ import palette from "../../styles/palette";
 
 import { monthList, dayList, yearList } from "../../lib/staticData";
 import { signupAPI } from "../../lib/api/auth";
+import { commonActions } from "../../store/common";
 
 
 const Container = styled.form`
@@ -87,7 +90,7 @@ const SignUpModal: React.FC = () => {
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
-  const [validateMode, setValidateMode] = useState(false);
+  const { setValidateMode } = useValidateMode();
 
   const dispatch = useDispatch();
 
@@ -153,7 +156,6 @@ const SignUpModal: React.FC = () => {
           name="email" 
           value={email} 
           onChange={onChangeEmail} 
-          validateMode={validateMode}
           useValidation
           isValid={!!email}
           errorMessage="이메일이 필요합니다"
@@ -165,7 +167,6 @@ const SignUpModal: React.FC = () => {
           icon={<PersonIcon />} 
           value={firstname} 
           onChange={onChangeFirstname} 
-          validateMode={validateMode}
           useValidation
           isValid={!!firstname}
           errorMessage="이름을 입력하세요"
@@ -177,7 +178,6 @@ const SignUpModal: React.FC = () => {
           icon={<PersonIcon />}
           value={lastname} 
           onChange={onChangeLastname}
-          validateMode={validateMode}
           useValidation
           isValid={!!lastname}
           errorMessage="성을 입력하세요"  
@@ -193,7 +193,6 @@ const SignUpModal: React.FC = () => {
           } 
           value={password} 
           onChange={onChangePassword}  
-          validateMode={validateMode}
           useValidation
           isValid={!!password}
           errorMessage="패스워드를 입력하세요"
