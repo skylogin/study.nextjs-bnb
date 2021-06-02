@@ -1,17 +1,19 @@
 import React from "react";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
 
 import styled from "styled-components";
 import palette from "../styles/palette";
 
 import useModal from "../hooks/useModal";
-import SignUpModal from "./auth/SignUpModal";
+import AuthModal from "./auth/AuthModal";
 
 import AirbnbLogoIcon from "../public/static/svg/logo/logo.svg";
 import AirbnbLogoTextIcon from "../public/static/svg/logo/logo_text.svg";
 import HamburgerIcon from "../public/static/svg/header/hamburger.svg";
 
 import { useSelector } from "../store";
+import { authActions } from "../store/auth";
 
 
 const Container = styled.div`
@@ -113,6 +115,8 @@ const Container = styled.div`
 const Header: React.FC = () => {
   const { openModal, closeModal, ModalPortal } = useModal();
   
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.user);
 
 
@@ -126,10 +130,24 @@ const Header: React.FC = () => {
       </Link>
       {!user.isLogged && (
         <div className="header-auth-buttons">
-          <button type="button" className="header-sign-up-button" onClick={openModal}>
+          <button 
+            type="button" 
+            className="header-sign-up-button" 
+            onClick={() => {
+              dispatch(authActions.setAuthMode("signup"));
+              openModal();
+            }}
+          >
             회원가입
           </button>
-          <button type="button" className="header-login-button">
+          <button 
+            type="button" 
+            className="header-login-button"
+            onClick={() => {
+              dispatch(authActions.setAuthMode("login"));
+              openModal();
+            }}
+          >
             로그인
           </button>
         </div>
@@ -141,7 +159,7 @@ const Header: React.FC = () => {
         </button>
       )}
       <ModalPortal>
-        <SignUpModal closeModal={closeModal} />
+        <AuthModal closeModal={closeModal} />
       </ModalPortal>
     </Container>
   );
