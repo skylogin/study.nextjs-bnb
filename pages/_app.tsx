@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 
-// import { wrapper } from "../store";
+import { wrapper } from "../store";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -18,5 +18,4 @@ const app = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-// export default wrapper.withRedux(app);
-export default app;
+export default wrapper.withRedux(app);

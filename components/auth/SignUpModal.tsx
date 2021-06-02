@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+
+import { userActions } from "../../store/user";
 
 import Input from "../common/Input";
 import Selector from "../common/Selector";
@@ -84,6 +87,8 @@ const SignUpModal: React.FC = () => {
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
+  const dispatch = useDispatch();
+
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   }
@@ -122,7 +127,8 @@ const SignUpModal: React.FC = () => {
         password, 
         birthday: new Date(`${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`).toISOString(),
       };
-      await signupAPI(signUpBody);
+      const { data } = await signupAPI(signUpBody);
+      dispatch(userActions.setLoggedUser(data));
     } catch(e){
       console.log(e);
     }
