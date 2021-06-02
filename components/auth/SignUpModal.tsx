@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
@@ -78,11 +78,21 @@ const Container = styled.form`
     padding-bottom: 16px;
     border-bottom: 1px solid ${palette.gray_eb};
   }
+
+  .sign-up-modal-set-login{
+    color: ${palette.dark_cyan};
+    margin-left: 8px;
+    cursor: pointer;
+  }
 `;
+
+interface IProps{
+  closeModal: () => void;
+}
 
 const PASSWORD_MIN_LENGTH = 8;
 
-const SignUpModal: React.FC = () => {
+const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
   const [email, setEmail] = useState("");
   const [lastname, setLastname] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -96,6 +106,12 @@ const SignUpModal: React.FC = () => {
   const { setValidateMode } = useValidateMode();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    return () => {
+      setValidateMode(false);
+    };
+  }, [])
 
   
 
@@ -142,35 +158,48 @@ const SignUpModal: React.FC = () => {
     [password]
   );
   
+  const validateSignUpForm = () => {
+    if(!email || !lastname || !firstname || !password){
+      return false;
+    }
 
+    if(isPasswordHasNameOrEmail || !isPasswordOverMinLength || isPasswordHasNumberOrSymbol){
+      return false;
+    }
+
+    if(!birthDay || !birthMonth || !birthYear){
+      return false;
+    }
+
+    return true;
+  }
 
   const onSubmitSignUp = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setValidateMode(true);
 
-    if(!email || !lastname || !firstname || !password){
-      return undefined;
-    }
-
-    try{
-      const signUpBody = {
-        email, 
-        lastname, 
-        firstname, 
-        password, 
-        birthday: new Date(`${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`).toISOString(),
-      };
-      const { data } = await signupAPI(signUpBody);
-      dispatch(userActions.setLoggedUser(data));
-    } catch(e){
-      console.log(e);
+    if(validateSignUpForm()){
+      try{
+        const signUpBody = {
+          email, 
+          lastname, 
+          firstname, 
+          password, 
+          birthday: new Date(`${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`).toISOString(),
+        };
+        const { data } = await signupAPI(signUpBody);
+        dispatch(userActions.setLoggedUser(data));
+        closeModal();
+      } catch(e){
+        console.log(e);
+      }
     }
   }
 
   return (
     <Container onSubmit={onSubmitSignUp}>
-      <CloseXIcon className="modal-close-x-icon" />
+      <CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
       <div className="input-wrapper">
         <Input 
           placeholder="이메일 주소" 
@@ -236,19 +265,26 @@ const SignUpModal: React.FC = () => {
       </p>
       <div className="sign-up-modal-birthday-selectors">
         <div className="sign-up-modal-birthday-month-selector">
-          <Selector options={monthList} disabledOptions={["월"]} defaultValue="월" value={birthMonth} onChange={onChangeBirthMonth} />
+          <Selector options={monthList} disabledOptions={["월"]} defaultValue="월" value={birthMonth} onChange={onChangeBirthMonth} isValid={!!birthMonth} />
         </div>
         <div className="sign-up-modal-birthday-day-selector">
-          <Selector options={dayList} disabledOptions={["일"]} defaultValue="일" value={birthDay} onChange={onChangeBirthDay} />
+          <Selector options={dayList} disabledOptions={["일"]} defaultValue="일" value={birthDay} onChange={onChangeBirthDay} isValid={!!birthDay} />
         </div>
         <div className="sign-up-modal-birthday-year-selector">
-          <Selector options={yearList} disabledOptions={["년"]} defaultValue="년" value={birthYear} onChange={onChangeBirthYear} />
+          <Selector options={yearList} disabledOptions={["년"]} defaultValue="년" value={birthYear} onChange={onChangeBirthYear} isValid={!!birthYear} />
         </div>
       </div>
 
       <div className="sign-up-modal-submit-button-wrapper">
         <Button type="submit">가입하기</Button>
       </div>
+
+      <p>
+        이미 에어비앤비 계정이 있나요?
+        <span className="sign-up-modal-set-login" role="presentation" onClick={() => {}}>
+          로그인
+        </span>
+      </p>
     </Container>
   );
 };
