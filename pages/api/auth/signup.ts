@@ -42,9 +42,20 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             birthday,
             profileImage: "/static/image/user/default_user_profile_image.jpg"
         };
-
         Data.user.write([...users, newUser]);
 
+        // JWT 생성
+        var jwt = require('jsonwebtoken');
+        const token = jwt.sign(String(newUser.id), process.env.JWT_SECRET!);
+        
+        const expire = new Date(Date.now() + 60 * 60 * 24 * 1000 * 3).toUTCString;
+        // 헤더 설정 (JWT 3일)
+        res.setHeader(
+            "Set-Cookie", 
+            `access-token=${token}; path=/; expires=${expire}; httponly`
+        );
+
+        res.statusCode = 200;
         return res.end();
     }
     res.statusCode = 405;
