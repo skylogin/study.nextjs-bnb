@@ -72,6 +72,7 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
     useEffect(() => {
         return () => {
             setValidateMode(false);
+            closeModal();
         };
     }, []);
 
@@ -102,8 +103,8 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
 
             try{
                 const { data } = await loginAPI(loginBody);
-                dispatch(userActions.setLoggedUser(data));
                 closeModal();
+                dispatch(userActions.setLoggedUser(data));
             } catch(e){
                 console.log(e);
             }

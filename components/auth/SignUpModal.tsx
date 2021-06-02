@@ -195,8 +195,8 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
           birthday: new Date(`${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`).toISOString(),
         };
         const { data } = await signupAPI(signUpBody);
-        dispatch(userActions.setLoggedUser(data));
         closeModal();
+        dispatch(userActions.setLoggedUser(data));
       } catch(e){
         console.log(e);
       }
@@ -253,7 +253,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
           onChange={onChangePassword}  
           onFocus={onFocusPassword}
           useValidation
-          isValid={!isPasswordHasNameOrEmail && !isPasswordOverMinLength && !isPasswordHasNumberOrSymbol}
+          isValid={!isPasswordHasNameOrEmail && isPasswordOverMinLength && !isPasswordHasNumberOrSymbol}
           errorMessage="패스워드를 입력하세요"
         />
       </div>
