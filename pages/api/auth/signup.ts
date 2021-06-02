@@ -55,8 +55,13 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             `access-token=${token}; path=/; expires=${expire}; httponly`
         );
 
+        // 패스워드 제외 유저정보
+        const newUserWithoutPassword: Partial<Pick<StoredUserType, "password">> = newUser;
+        delete newUserWithoutPassword.password;
+        
+
         res.statusCode = 200;
-        return res.end();
+        return res.send(newUser);
     }
     res.statusCode = 405;
     return res.end();
