@@ -52,7 +52,7 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             // 헤더 설정 (JWT 3일)
             res.setHeader(
                 "Set-Cookie", 
-                `access-token=${token}; path=/; expires=${expire}; httponly`
+                `access_token=${token}; path=/; expires=${expire}; httponly`
             );
     
             // 패스워드 제외 유저정보
