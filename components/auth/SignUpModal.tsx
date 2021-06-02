@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
@@ -20,7 +20,7 @@ import palette from "../../styles/palette";
 
 import { monthList, dayList, yearList } from "../../lib/staticData";
 import { signupAPI } from "../../lib/api/auth";
-import { commonActions } from "../../store/common";
+import PasswordWarning from "./PasswordWarning";
 
 
 const Container = styled.form`
@@ -80,6 +80,8 @@ const Container = styled.form`
   }
 `;
 
+const PASSWORD_MIN_LENGTH = 8;
+
 const SignUpModal: React.FC = () => {
   const [email, setEmail] = useState("");
   const [lastname, setLastname] = useState("");
@@ -89,10 +91,13 @@ const SignUpModal: React.FC = () => {
   const [birthYear, setBirthYear] = useState<string | undefined>();
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const { setValidateMode } = useValidateMode();
 
   const dispatch = useDispatch();
+
+  
 
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -107,6 +112,9 @@ const SignUpModal: React.FC = () => {
     setPassword(event.target.value);
   }
 
+  const onFocusPassword = () => {
+    setPasswordFocused(true);
+  }
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   }
@@ -120,6 +128,21 @@ const SignUpModal: React.FC = () => {
   const onChangeBirthYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setBirthYear(event.target.value);
   }
+
+  const isPasswordHasNameOrEmail = useMemo(
+    () => !password || !lastname || password.includes(lastname) || password.includes(email.split("@")[0]), 
+    [password, lastname, email]
+  );
+  const isPasswordOverMinLength = useMemo(
+    () => !!password && password.length >= PASSWORD_MIN_LENGTH,
+    [password]
+  );
+  const isPasswordHasNumberOrSymbol = useMemo(
+    () => !(/[{}[\]/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]/g.test(password) || /[0-9]/g.test(password)),
+    [password]
+  );
+  
+
 
   const onSubmitSignUp = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -193,11 +216,19 @@ const SignUpModal: React.FC = () => {
           } 
           value={password} 
           onChange={onChangePassword}  
+          onFocus={onFocusPassword}
           useValidation
-          isValid={!!password}
+          isValid={!isPasswordHasNameOrEmail && !isPasswordOverMinLength && !isPasswordHasNumberOrSymbol}
           errorMessage="패스워드를 입력하세요"
         />
       </div>
+      {passwordFocused && (
+        <>
+          <PasswordWarning isValid={isPasswordHasNameOrEmail} text="비밀번호에 본인 이름이나 이메일주소를 포함할 수 없습니다." />
+          <PasswordWarning isValid={!isPasswordOverMinLength} text="최소 8자" />
+          <PasswordWarning isValid={isPasswordHasNumberOrSymbol} text="숫자나 기호를 포함하세요." />
+        </>
+      )}
 
       <p className="sign-up-birthdate-label">생일</p>
       <p className="sign-up-modal-birthday-info">
