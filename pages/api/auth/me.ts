@@ -25,7 +25,7 @@ export default async(req: NextApiRequest, res: NextApiResponse) => {
             delete userWithoutPassword.password;
 
             res.statusCode = 200;
-            return res.end();
+            return res.send(user);
         } catch(e){
             console.log(e);
         } finally{
