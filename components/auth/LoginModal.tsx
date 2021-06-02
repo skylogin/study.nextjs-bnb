@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+
+import { authActions } from "../../store/auth";
 
 import Input from "../common/Input";
 import Button from "../common/Button";
@@ -10,7 +13,6 @@ import OpenedEyeIcon from "../../public/static/svg/auth/opened_eye.svg";
 import ClosedEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
 
 import palette from "../../styles/palette";
-
 
 
 const Container = styled.form`
@@ -54,6 +56,26 @@ interface IProps{
 }
 
 const LoginModal: React.FC<IProps> = ({ closeModal }) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isPasswordHided, setIsPasswordHided] = useState(true);
+
+    const dispatch = useDispatch();
+
+    const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+    };
+    const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
+    const togglePasswordHiding = () => {
+        setIsPasswordHided(!isPasswordHided);
+    };
+
+    const changeToSignUpModal = () => {
+        dispatch(authActions.setAuthMode("signup"));
+    };
+
   return (
     <Container>
       <CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
@@ -63,14 +85,20 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           type="email" 
           icon={<MailIcon />} 
           name="email" 
+          value={email}
+          onChange={onChangeEmail}
         />
       </div>
       <div className="login-input-wrapper login-password-input-wrapper">
         <Input 
           placeholder="비밀번호 설정하기" 
-          type="password"
-        //   type={hidePassword? "password": "text"}
-          icon={<ClosedEyeIcon />}
+          type={isPasswordHided? "password": "text"}
+          icon={isPasswordHided? (
+            <ClosedEyeIcon onClick={togglePasswordHiding} />): (
+            <OpenedEyeIcon onClick={togglePasswordHiding} />)
+          } 
+          value={password}
+          onChange={onChangePassword}
         />
       </div>
 
@@ -80,7 +108,7 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
 
       <p>
         에어비앤비 계정이 없으신가요?
-        <span className="login-modal-set-signup" role="presentation" onClick={() => {}}>
+        <span className="login-modal-set-signup" role="presentation" onClick={changeToSignUpModal}>
           회원가입
         </span>
       </p>

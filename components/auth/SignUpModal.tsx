@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
 import { userActions } from "../../store/user";
+import { authActions } from "../../store/auth";
 
 import Input from "../common/Input";
 import Selector from "../common/Selector";
@@ -145,6 +146,11 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
     setBirthYear(event.target.value);
   }
 
+  const changeToLoginModal = () => {
+    dispatch(authActions.setAuthMode("login"));
+  };
+
+
   const isPasswordHasNameOrEmail = useMemo(
     () => !password || !lastname || password.includes(lastname) || password.includes(email.split("@")[0]), 
     [password, lastname, email]
@@ -281,7 +287,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 
       <p>
         이미 에어비앤비 계정이 있나요?
-        <span className="sign-up-modal-set-login" role="presentation" onClick={() => {}}>
+        <span className="sign-up-modal-set-login" role="presentation" onClick={changeToLoginModal}>
           로그인
         </span>
       </p>
