@@ -19,6 +19,7 @@ module.exports = {
     quotes: ["error", "double"], // 더블 쿼터 사용
     "quote-props": "off",
     "eol-last": "off",
+    semi: "off",
     "no-trailing-spaces": "off",
     "keyword-spacing": "off",
     "no-multiple-empty-lines": "off",
