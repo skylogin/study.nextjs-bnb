@@ -92,7 +92,7 @@ const Container = styled.div<SelectorContainerProps>`
     }}
 
     &:disabled {
-      background-image: url("/static/svg/commont/selector/disabled_register_selector_down_arrow.svg");
+      background-image: url("/static/svg/common/selector/disabled_register_selector_down_arrow.svg");
       background-color: ${palette.gray_f7};
       border-color: ${palette.gray_e5};
       color: ${palette.gray_e5};
