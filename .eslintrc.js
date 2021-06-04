@@ -23,6 +23,7 @@ module.exports = {
     "no-trailing-spaces": "off",
     "keyword-spacing": "off",
     "no-undef": "off",
+    "import/extensions": "off",
     "no-multiple-empty-lines": "off",
     "space-before-blocks": "off",
     "eact/jsx-tag-spacing": "off",
