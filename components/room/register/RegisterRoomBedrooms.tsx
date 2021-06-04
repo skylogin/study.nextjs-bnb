@@ -13,6 +13,7 @@ import Button from "../../common/Button";
 
 import RegisterRoomBedTypes from "./RegisterRoomBedType";
 import RegisterRoomPublicBedTypes from "./RegisterRoomPublicBedTypes";
+import RegisterRoomFooter from "./RegisterRoomFooter";
 
 import { bedroomCountList } from "../../../lib/staticData";
 import { getNumber } from "../../../lib/utils";
@@ -111,6 +112,7 @@ const RegisterRoomBedrooms: React.FC = () => {
           onChange={onChangeBedroomCount}
           label="게스트가 사용할 수 있는 침실은 몇 개 인가요?"
           options={bedroomCountList}
+          isValid={!!bedroomCount}
         />
       </div>
       <div className="register-room-bed-count-wrapper">
@@ -128,6 +130,11 @@ const RegisterRoomBedrooms: React.FC = () => {
         })}
         <RegisterRoomPublicBedTypes />
       </ul>
+      <RegisterRoomFooter
+        prevHref="/room/register/building"
+        nextHref="/room/register/bathroom"
+        isValid={!!bedroomCount}
+      />
     </Container>
   );
 };
