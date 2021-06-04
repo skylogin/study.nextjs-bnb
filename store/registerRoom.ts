@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { BedType } from "../types/room";
@@ -11,7 +12,7 @@ type RegisterRoomState = {
   maximumGuestCount: number;
   bedroomCount: number;
   bedCount: number;
-  bedList: { id: number; beds: { type:BedType; count: number }[] }[];
+  bedList: { id: number, beds: { type:BedType, count: number }[] }[];
   publicBedList: { type: BedType; count: number }[];
 };
 
@@ -62,11 +63,44 @@ const registerRoom = createSlice({
       return state;
     },
     setBedroomCount(state, action: PayloadAction<number>){
-      state.bedroomCount = action.payload;
+      const bedroomCount = action.payload;
+      let { bedList } = state;
+
+      state.bedroomCount = bedroomCount;
+      if(bedroomCount < bedList.length){
+        //기존 침대개수가 더 많으면 
+        bedList = state.bedList.slice(0, bedroomCount);
+      } else {
+        //변경될 침대개수가 더 많으면
+        for(let i = bedList.length+1; i < bedroomCount + 1; i += 1){
+          bedList.push({ id: i, beds: [] });
+        }
+      }
+      state.bedList = bedList;
+
       return state;
     },
     setBedCount(state, action: PayloadAction<number>){
       state.bedCount = action.payload;
+      return state;
+    },
+    setBedTypeCount(state, action: PayloadAction<{ bedroomId: number; type: BedType; count: number }>) {
+      const { bedroomId, type, count } = action.payload;
+      const bedroom = state.bedList[bedroomId - 1];
+      const prevBeds = bedroom.beds;
+      const index = prevBeds.findIndex((bed) => bed.type === type);
+      if(index === -1){
+        // 타입이 없다면
+        state.bedList[bedroomId - 1].beds = [...prevBeds, { type, count }];
+        return state;
+      }
+
+      if(count === 0){
+        // 타입이 있다면
+        state.bedList[bedroomId - 1].beds.splice(index, 1);
+      } else{
+        state.bedList[bedroomId - 1].beds[index].count = count;
+      }
       return state;
     },
   },
