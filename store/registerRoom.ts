@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type RegisterRoomState = {
   largeBuildingType: string | null;
   buildingType: string | null;
-  rootType: string | null;
+  roomType: string | null;
   isSetUpForGuest: boolean | null;
 };
 
