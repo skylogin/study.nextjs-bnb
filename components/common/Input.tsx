@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from "react"
 import styled, { css } from "styled-components";
 import palette from "../../styles/palette";
@@ -37,7 +38,7 @@ const Container = styled.div<InputContainerProps>`
     .input-error-message{
         margin-top: 8px;
         font-weight: 600;
-        fint-size: 14px;
+        font-size: 14px;
         color: ${palette.tawny};
     }
     ${({ useValidation, isValid }) => 
@@ -58,21 +59,36 @@ const Container = styled.div<InputContainerProps>`
             }
         `
     }
+    label{
+        span{
+            display: block;
+            margin-bottom: 8px;
+        }
+    }
 `;
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement>{
+    label: string;
     icon?: JSX.Element;
     isValid?: boolean;
     useValidation?: boolean;
     errorMessage?: string;
 }
 
-const Input: React.FC<IProps> = ({ icon, isValid = false, useValidation = true, errorMessage, ...props }) => {
+const Input: React.FC<IProps> = ({ 
+    label, icon, isValid = false, useValidation = true, errorMessage, ...props 
+}) => {
     const validateMode = useSelector((state) => state.common.validateMode);
     
     return (
         <Container iconExist={!!icon} isValid={isValid} useValidation={validateMode && useValidation}>
-            <input {...props} />
+            {label && (
+                <label>
+                    <span>{label}</span>
+                    <input {...props} />
+                </label>
+            )}
+            {!label && <input {...props} />}
             {icon}
             {useValidation && validateMode && !isValid && errorMessage && (
                 <p className="input-error-message">{errorMessage}</p>

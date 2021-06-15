@@ -53,7 +53,7 @@ const RegisterRoomBathroom: React.FC = () => {
     <Container>
       <h2>욕실 수</h2>
       <h3>3단계</h3>
-      <p className="room-register-step-info">
+      <p className="register-room-step-info">
         샤워실 또는 욕조가 없는 경우 0.5개로 간주합니다.
       </p>
       <div className="register-room-bathroom-count-wrapper">

@@ -25,6 +25,7 @@ module.exports = {
     "keyword-spacing": "off",
     "no-undef": "off",
     "no-multiple-empty-lines": "off",
+    "react/jsx-boolean-value": "off",
     "space-before-blocks": "off",
     "eact/jsx-tag-spacing": "off",
     "no-multi-spaces": "off",
