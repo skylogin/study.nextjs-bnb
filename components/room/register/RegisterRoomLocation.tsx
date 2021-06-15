@@ -12,6 +12,7 @@ import Selector from "../../common/Selector";
 import Input from "../../common/Input";
 // import RadioGroup from "../../common/RadioGroup"
 
+import { getLocationInfoAPI } from "../../../lib/api/map";
 import { countryList } from "../../../lib/staticData";
 import NavigationIcon from "../../../public/static/svg/register/navigation.svg";
 
@@ -76,6 +77,25 @@ const RegisterRoomLocation: React.FC = () => {
     dispatch(registerRoomActions.setPostcode(event.target.value));
   }
 
+  const onSuccessGetLocation = async ({ coords }: { coords: any }) => {
+    try{
+      await getLocationInfoAPI({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+    } catch(e){
+      console.log(e);
+      alert(e?.message);
+    }
+  }
+
+  const onClickGetCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(onSuccessGetLocation, (e) => {
+      console.log(e);
+      alert(e?.message);
+    });
+  };
+
 
   return (
     <Container>
@@ -85,7 +105,7 @@ const RegisterRoomLocation: React.FC = () => {
         정확한 숙소 주소는 게스트가 예약을 완료한 후에만 공개됩니다.
       </p>
       <div className="register-room-location-button-wrapper">
-        <Button color="dark_cyan" colorReverse icon={<NavigationIcon />}>
+        <Button color="dark_cyan" colorReverse icon={<NavigationIcon />} onClick={onClickGetCurrentLocation}>
           현재 위치 사용
         </Button>
       </div>
