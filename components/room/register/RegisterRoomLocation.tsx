@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import styled from "styled-components";
@@ -10,7 +10,6 @@ import { registerRoomActions } from "../../../store/registerRoom";
 import Button from "../../common/Button";
 import Selector from "../../common/Selector";
 import Input from "../../common/Input";
-// import RadioGroup from "../../common/RadioGroup"
 
 import { getLocationInfoAPI } from "../../../lib/api/map";
 import { countryList } from "../../../lib/staticData";
@@ -56,6 +55,8 @@ const RegisterRoomLocation: React.FC = () => {
   const detailAddress = useSelector((state) => state.registerRoom.detailAddress);
   const postcode = useSelector((state) => state.registerRoom.postcode);
 
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const onChangeCountry = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -79,17 +80,27 @@ const RegisterRoomLocation: React.FC = () => {
 
   const onSuccessGetLocation = async ({ coords }: { coords: any }) => {
     try{
-      await getLocationInfoAPI({
+      const { data: currentLocation } = await getLocationInfoAPI({
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
+
+      dispatch(registerRoomActions.setCountry(currentLocation.country));
+      dispatch(registerRoomActions.setCity(currentLocation.city));
+      dispatch(registerRoomActions.setDistrict(currentLocation.district));
+      dispatch(registerRoomActions.setStreetAddress(currentLocation.streetAddress));
+      dispatch(registerRoomActions.setPostcode(currentLocation.postcode));
+      dispatch(registerRoomActions.setLatitude(currentLocation.latitude));
+      dispatch(registerRoomActions.setLongitude(currentLocation.longitude));
     } catch(e){
       console.log(e);
       alert(e?.message);
     }
+    setLoading(false);
   }
 
   const onClickGetCurrentLocation = () => {
+    setLoading(true);
     navigator.geolocation.getCurrentPosition(onSuccessGetLocation, (e) => {
       console.log(e);
       alert(e?.message);
@@ -106,7 +117,7 @@ const RegisterRoomLocation: React.FC = () => {
       </p>
       <div className="register-room-location-button-wrapper">
         <Button color="dark_cyan" colorReverse icon={<NavigationIcon />} onClick={onClickGetCurrentLocation}>
-          현재 위치 사용
+          {loading? "불러오는 중...": "현재 위치 사용"}
         </Button>
       </div>
       <div className="register-room-location-country-selector-wrapper">
@@ -114,7 +125,6 @@ const RegisterRoomLocation: React.FC = () => {
           type="register"
           options={countryList}
           useValidation={false}
-          defaultValue="국가/지역 선택"
           disabledOptions={["국가/지역 선택"]}
           value={country}
           onChange={onChangeCountry}
@@ -134,6 +144,11 @@ const RegisterRoomLocation: React.FC = () => {
       <div className="register-room-location-postcode">
         <Input label="우편번호" value={postcode} onChange={onChangePostcode} />
       </div>
+
+      <RegisterRoomFooter
+        prevHref="/room/register/bathroom"
+        nextHref="/room/register/geometry"
+      />
     </Container>
   );
 };
