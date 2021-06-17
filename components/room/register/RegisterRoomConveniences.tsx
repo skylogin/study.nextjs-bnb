@@ -9,7 +9,7 @@ import { registerRoomActions } from "../../../store/registerRoom";
 
 import CheckboxGroup from "../../common/CheckboxGroup";
 
-import { amentityList } from "../../../lib/staticData";
+import { convenienceList } from "../../../lib/staticData";
 
 import RegisterRoomFooter from "./RegisterRoomFooter";
 
@@ -35,37 +35,37 @@ const Container = styled.div`
   }
 `;
 
-const RegisterRoomAmenities: React.FC = () => {
+const RegisterRoomConveniences: React.FC = () => {
   const dispatch = useDispatch();
 
-  const amenities = useSelector((state) => state.registerRoom.amenities);
+  const conveniences = useSelector((state) => state.registerRoom.conveniences);
 
-  const onChangeAmenities = (selected: string[]) => {
-    dispatch(registerRoomActions.setAmenities(selected));
+  const onChangeConveniences = (selected: string[]) => {
+    dispatch(registerRoomActions.setConveniences(selected));
   }
 
   return (
     <Container>
-      <h2>어떤 편의 시설을 제공하시나요?</h2>
-      <h3>5단계</h3>
+      <h2>게스트가 어떤 공간을 사용할 수 있나요?</h2>
+      <h3>6단계</h3>
       <p className="register-room-step-info">
-        일반적으로 게스트가 기대하는 편의 시설 목록입니다. 숙소를 등록한 후 언제든 편의시설을 추가할 수 있어요.
+        등록하고자 하는 숙소에서 게스트가 이용 가능한 공용공간을 선택하세요.
       </p>
 
-      <div className="register-room-amenites-checkbox-group-wrapper">
+      <div className="register-room-conveniences-checkbox-group-wrapper">
         <CheckboxGroup
-          value={amenities}
-          onChange={onChangeAmenities}
-          options={amentityList}
+          value={conveniences}
+          onChange={onChangeConveniences}
+          options={convenienceList}
         />
       </div>
 
       <RegisterRoomFooter
-        prevHref="/room/register/location"
-        nextHref="/room/register/conveniences"
+        prevHref="/room/register/amenities"
+        nextHref="/room/register/photo"
       />
     </Container>
   );
 };
 
-export default RegisterRoomAmenities;
+export default RegisterRoomConveniences;
