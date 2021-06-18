@@ -12,6 +12,8 @@ import { useSelector } from "../../../store";
 import { searchRoomActions } from "../../../store/searchRoom";
 import { searchPlacesAPI } from "../../../lib/api/map";
 
+import useDebounce from "../../../hooks/useDebounce";
+
 
 const Container = styled.div`
   position: relative;
@@ -77,9 +79,11 @@ const SearchRoomBarLocation: React.FC = () => {
   const [popupOpened, setPopupOpened] = useState(false);
   const [results, setResults] = useState<{description: string, placeId: string}[]>([]);
 
+  
   const inputRef = useRef<HTMLInputElement | null>(null);
   
   const location = useSelector((state) => state.searchRoom.location);
+  const searchKeyword = useDebounce(location, 150);
 
   const dispatch = useDispatch();
 
@@ -104,10 +108,14 @@ const SearchRoomBarLocation: React.FC = () => {
   };
 
   useEffect(() => {
-    if(location){
+    if(!searchKeyword){
+      setResults([]);
+    }
+
+    if(searchKeyword){
       searchPlaces();
     }
-  }, [location])
+  }, [searchKeyword])
 
   return (
     <Container onClick={onClickInput}>
