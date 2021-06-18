@@ -30,19 +30,11 @@ const Container = styled.div`
 const RegisterRoomDate: React.FC = () => {
   const dispatch = useDispatch();
 
-  const price = useSelector((state) => state.registerRoom.price);
+  const startDate = useSelector((state) => state.registerRoom.startDate);
 
-  const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-
-    const numberPrice = Number(input.replace(/,/g, ""));
-    if(!numberPrice || numberPrice === 0){
-      dispatch(registerRoomActions.setPrice(0));
-    }
-
-    if(numberPrice !== 0){
-      dispatch(registerRoomActions.setPrice(numberPrice));
-    }
+  const onChangeStartDate= (date: Date | null) => {
+    console.log(date);
+    dispatch(registerRoomActions.setStartDate(date? date.toISOString(): null));
   }
 
   return (
@@ -50,7 +42,10 @@ const RegisterRoomDate: React.FC = () => {
       <h2>예약 가능 여부 설정.</h2>
       <h3>11단계</h3>
 
-      <DatePicker onChange={(date) => console.log(date)} />
+      <DatePicker 
+        selected={startDate? new Date(startDate): null}
+        onChange={onChangeStartDate} 
+      />
 
       <RegisterRoomFooter
         prevHref="/room/register/price"

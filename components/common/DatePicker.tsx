@@ -3,6 +3,9 @@ import React from "react"
 import ReactDatePicker, { ReactDatePickerProps } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import addHours from "date-fns/addHours";
+import ko from "date-fns/locale/ko";
+
 import styled, { css } from "styled-components";
 import palette from "../../styles/palette";
 
@@ -126,11 +129,23 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement>{
 }
 
 const DatePicker: React.FC<ReactDatePickerProps> = ({ 
-    ...props
+    onChange, ...props
 }) => {
     return (
         <Container>
-            <ReactDatePicker {...props} disabledKeyboardNavigation />
+            <ReactDatePicker 
+              {...props} 
+              disabledKeyboardNavigation 
+              locale={ko} 
+              dateFormat="MM월 dd일"
+              onChange={(date, event) => {
+                if(date){
+                  onChange(addHours(date as Date, 9), event);
+                } else{
+                  onChange(null, event);
+                }
+              }}
+            />
         </Container>
     );
 };
