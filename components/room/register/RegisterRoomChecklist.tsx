@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useSelector } from "../../../store";
 
 import RegisterRoomCheckStep from "./RegisterRoomCheckStep";
+import RegisterRoomSubmitFooter from "./RegisterRoomSubmitFooter";
 import RegisterRoomFooter from "./RegisterRoomFooter";
 
 
@@ -280,10 +281,14 @@ const RegisterRoomChecklist: React.FC = () => {
         />
       </ul>
 
-      <RegisterRoomFooter
-        prevHref="/room/register/date"
-        nextHref="/room/register/"
-      />
+      {isDateActived? (
+        <RegisterRoomSubmitFooter />
+      ): (
+        <RegisterRoomFooter
+          prevHref="/room/register/date"
+          nextHref={`/room/register/${stepInProgress}`}
+        />
+      )}
     </Container>
   );
 };
