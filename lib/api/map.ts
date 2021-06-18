@@ -18,3 +18,9 @@ export const getLocationInfoAPI = async ({
   latitude: number;
   longitude: number;
 }) => axios.get(`/api/maps/location?latitude=${latitude}&longitude=${longitude}`);
+
+export const searchPlacesAPI = (keyword: string) => {
+  return axios.get<{ description: string; placeId: string }[]>(
+    `/api/maps/places?keyword=${keyword}`
+  );
+};

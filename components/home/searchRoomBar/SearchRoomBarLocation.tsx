@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
+
+import isEmpty from "lodash/isEmpty";
 
 import { useDispatch } from "react-redux";
 
@@ -8,6 +10,7 @@ import palette from "../../../styles/palette";
 
 import { useSelector } from "../../../store";
 import { searchRoomActions } from "../../../store/searchRoom";
+import { searchPlacesAPI } from "../../../lib/api/map";
 
 
 const Container = styled.div`
@@ -72,6 +75,7 @@ const Container = styled.div`
 
 const SearchRoomBarLocation: React.FC = () => {
   const [popupOpened, setPopupOpened] = useState(false);
+  const [results, setResults] = useState<{description: string, placeId: string}[]>([]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   
@@ -90,6 +94,21 @@ const SearchRoomBarLocation: React.FC = () => {
     setPopupOpened(true);
   };
 
+  const searchPlaces = async () => {
+    try{
+      const { data } = await searchPlacesAPI(encodeURI(location));
+      setResults(data);
+    } catch(e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if(location){
+      searchPlaces();
+    }
+  }, [location])
+
   return (
     <Container onClick={onClickInput}>
       <OutsideClickHandler onOutsideClick={() => setPopupOpened(false)}>
@@ -97,9 +116,13 @@ const SearchRoomBarLocation: React.FC = () => {
           <p className="search-room-bar-location-label">인원</p>
           <input value={location} onChange={(e) => setLocationDispatch(e.target.value)} placeholder="어디로 여행 가세요?" />
         </div>
-        {popupOpened && (
+        {popupOpened && location !== "근처 추천 장소" && (
           <ul className="search-room-bar-location-results">
-            <li>근처 추천 장소</li>
+            {!location && <li>근처 추천 장소</li>}
+            {!isEmpty(results)&& results.map((result, index) => (
+              <li key={index}>{result.description}</li>
+            ))}
+            {location && isEmpty(results) && <li>검색 결과가 없습니다.</li>}
           </ul>
         )}
       </OutsideClickHandler>
