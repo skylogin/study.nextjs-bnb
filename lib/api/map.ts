@@ -24,3 +24,7 @@ export const searchPlacesAPI = (keyword: string) => {
     `/api/maps/places?keyword=${keyword}`
   );
 };
+
+export const getPlaceAPI = (placeId: string) => {
+  return axios.get<{ location: string; latitude: number; longitude: number }>(`/api/maps/places/${placeId}`);
+};

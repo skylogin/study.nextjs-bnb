@@ -10,7 +10,7 @@ import palette from "../../../styles/palette";
 
 import { useSelector } from "../../../store";
 import { searchRoomActions } from "../../../store/searchRoom";
-import { searchPlacesAPI } from "../../../lib/api/map";
+import { searchPlacesAPI, getPlaceAPI } from "../../../lib/api/map";
 
 import useDebounce from "../../../hooks/useDebounce";
 
@@ -90,12 +90,42 @@ const SearchRoomBarLocation: React.FC = () => {
   const setLocationDispatch = (value: string) => {
     dispatch(searchRoomActions.setLocation(value));
   }
+  const setLatitudeDispatch = (value: number) => {
+    dispatch(searchRoomActions.setLatitude(value));
+  }
+  const setLongitudeDispatch = (value: number) => {
+    dispatch(searchRoomActions.setLongitude(value));
+  }
 
   const onClickInput = () => {
     if(inputRef.current){
       inputRef.current.focus();
     }
     setPopupOpened(true);
+  };
+  const onClickNearPlaces = () => {
+    setPopupOpened(false);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setLocationDispatch("근처 추천 장소");
+        setLatitudeDispatch(coords.latitude);
+        setLongitudeDispatch(coords.longitude);
+      },
+      (e) => {
+        console.log(e);
+      }
+    )
+  };
+  const onClickResult = async (placeId: string) => {
+    try {
+      const { data } = await getPlaceAPI(placeId);
+      setLocationDispatch(data.location);
+      setLatitudeDispatch(data.latitude);
+      setLongitudeDispatch(data.longitude);
+      setPopupOpened(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const searchPlaces = async () => {
