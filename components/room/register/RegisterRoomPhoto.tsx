@@ -49,6 +49,10 @@ const Container = styled.div`
     border-radius: 6px;
   }
   input{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
     cursor: pointer;
   }
   img{
