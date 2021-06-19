@@ -55,7 +55,7 @@ interface StyledButtonProps {
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  color?: "dark_cyan" | "white" | "bittersweet";
+  color?: "dark_cyan" | "white" | "bittersweet" | "amaranth";
   width?: string;
   colorReverse?: boolean;
   icon?: JSX.Element;
@@ -92,6 +92,11 @@ const getButtonColor = (color: string, colorReverse: boolean) => {
     case "bittersweet":
       return css`
         background-color: ${palette.bittersweet};
+        color: white;
+      `;
+    case "amaranth":
+      return css`
+        background-color: ${palette.amaranth};
         color: white;
       `;
     default:

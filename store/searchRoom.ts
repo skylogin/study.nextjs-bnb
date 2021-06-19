@@ -9,7 +9,7 @@ const initialState: SearchRoomState = {
   longitude: 0,
   checkInDate: null,
   checkOutDate: null,
-  adultCount: 0,
+  adultCount: 1,
   childrenCount: 0,
   infantsCount: 0,
 };
