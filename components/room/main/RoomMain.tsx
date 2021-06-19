@@ -12,7 +12,7 @@ import MapIcon from "../../../public/static/svg/room/main/map.svg";
 
 import RoomList from "./RoomList";
 
-// const RoomListMap = dynamic(() => import("./RoomListMap"), { ssr: false });
+const RoomListMap = dynamic(() => import("./RoomListMap"), { ssr: false });
 
 const Container = styled.div<{ showMap: boolean }>`
   padding: 50px 80px;
@@ -117,7 +117,7 @@ const RoomMain: React.FC = () => {
       </div>
       <div className="room-list-wrapper">
         <RoomList showMap={showMap} />
-        {/* {showMap && <RoomListMap showMap={showMap} setShowMap={setShowMap} />} */}
+        {showMap && <RoomListMap showMap={showMap} setShowMap={setShowMap} />}
       </div>
     </Container>
   );

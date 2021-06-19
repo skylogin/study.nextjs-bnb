@@ -47,11 +47,11 @@ const Container = styled.div`
   }
 `;
 
-declare global {
-  interface Window {
-    initMap: () => void;
-  }
-}
+// declare global {
+//   interface Window {
+//     initMap: () => void;
+//   }
+// }
 
 const loadMapScript = () => {
   return new Promise<void>((resolve) => {
